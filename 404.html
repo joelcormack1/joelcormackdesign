@@ -90,7 +90,8 @@ body.viewing>*:not(#work):not(#cx){opacity:.1;transition:opacity .4s ease} body>
   .proj .big{position:relative;left:auto;top:auto;transform:none;--hh:min(60vh, (100vw - 40px) / 1.3);width:min(calc(100vw - 40px), var(--hh) * var(--r));max-width:none;height:auto;margin:0 auto}
   .proj .subs{position:static;flex-direction:row;width:100%;max-height:none;overflow-x:auto;overflow-y:hidden;padding:0 20px;margin-top:12px;gap:8px} .tile{width:72px}
   .proj .subs.more{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 64px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 64px),transparent)}
-  .proj .meta{position:static;flex-direction:row;flex-wrap:wrap;gap:12px;margin-top:16px;padding:0 20px;bottom:auto}
+  .proj .meta{position:static;flex-direction:row;flex-wrap:wrap;gap:10px;margin-top:12px;padding:0 20px;bottom:auto;font-size:11px}   /* Joel: smaller under the image on phones */
+  .proj .subs .tile{width:54px} #work .about h2{font-size:11px} #work .about h2 small{margin-top:4px} #work .about p{font-size:13px;line-height:1.45} #work .about{gap:10px;padding:18px 20px 0}
   #fashion{padding:calc(44px + 24px) 20px 200px} #logofolio{padding:calc(44px + 24px) 16px 200px} #fashion{--fh:min(150px,(100vw - 24px) / 2.46);padding-left:12px;padding-right:12px} #fashion .grid{gap:22px 12px} #finfo{grid-template-columns:1fr;gap:10px;padding:40px 20px 24px}
   #work .strip{height:50vh;touch-action:none} #work .about{grid-template-columns:1fr;gap:16px;padding:24px 20px 0}}
 @media (max-width:900px) and (orientation:portrait){#wm{top:calc(44px + 7vh);font-size:30vw;line-height:.92;white-space:normal;padding:0 2vw}}
@@ -140,7 +141,7 @@ body{background:#000;color:#fff}
 </style></head>
 <body>
 <div id="top"></div>
-<header id="hd" class="caps"><a class="name" href="#top">Joel Cormack</a><nav class="nav"><a href="#work" id="navwork">Work</a><a href="about/?v=1791755106">About</a></nav><div class="loc"><span>Current Location:</span><b>Los Angeles, California</b></div><nav class="cats"><button data-cat="All">All</button><button data-cat="Fashion">Fashion</button><button data-cat="Branding">Branding</button><button data-cat="UI/UX">UI/UX</button><button data-cat="Advertising">Advertising</button><button data-cat="Logofolio">Logofolio</button></nav></header>
+<header id="hd" class="caps"><a class="name" href="#top">Joel Cormack</a><nav class="nav"><a href="#work" id="navwork">Work</a><a href="about/?v=1791756508">About</a></nav><div class="loc"><span>Current Location:</span><b>Los Angeles, California</b></div><nav class="cats"><button data-cat="All">All</button><button data-cat="Fashion">Fashion</button><button data-cat="Branding">Branding</button><button data-cat="UI/UX">UI/UX</button><button data-cat="Advertising">Advertising</button><button data-cat="Logofolio">Logofolio</button></nav></header>
 <section id="intro"><div class="pin">
   <h1 id="wm"><span class="word">Joel</span> <span class="word">C<span class="z">o<i></i></span>rmack</span></h1>
   
@@ -238,19 +239,37 @@ body{background:#000;color:#fff}
   // The wheel (or a drag) drives the row left and right; the row is repeated so it loops without a seam.
   const work=document.getElementById('work'), strip=work.querySelector('.strip'), track=work.querySelector('.track'), wt=work.querySelector('h2'), wp=work.querySelector('p');
   let wx=0, wtarget=0, setW=0, raf=0, viewing=false, wname='';
-  function build(p){ const h=strip.clientHeight, gap=24, one=p.images.map(im=>im.video?'<video src="'+im.video+'" poster="'+im.big+'" muted loop playsinline autoplay style="width:'+(im.r*h)+'px"></video>':'<img src="'+im.big+'" alt="" style="width:'+(im.r*h)+'px">').join('');
-    setW=p.images.reduce((a,im)=>a+im.r*h+gap,0); const reps=Math.max(2,Math.ceil(innerWidth/setW)+2); track.innerHTML=one.repeat(reps); track.querySelectorAll('video').forEach(v=>{ v.muted=true; v.play().catch(()=>{}); }); }
-  function tick(){ wx+=(wtarget-wx)*0.11; const m=((wx%setW)+setW)%setW; track.style.transform='translate3d('+(-m)+'px,0,0)'; if(viewing) raf=requestAnimationFrame(tick); }
+  // Phones (Joel, 2026-10-11: wide pieces ran off the screen): each image fits the screen width (16px each side) and sits centred
+  // in the row; desktop keeps one shared height. dims() is the single source for widths, so looping and centring agree.
+  const gapW=()=>innerWidth<=900?14:24;
+  function dims(im){ const H=strip.clientHeight, maxW=innerWidth<=900?innerWidth-32:Infinity; const h=Math.min(H,maxW/im.r); return {w:im.r*h,h}; }
+  function build(p){ const gap=gapW(); track.style.gap=gap+'px'; const one=p.images.map(im=>{ const d=dims(im), st='width:'+d.w+'px;height:'+d.h+'px;align-self:center';
+      return im.video?'<video src="'+im.video+'" poster="'+im.big+'" muted loop playsinline autoplay style="'+st+'"></video>':'<img src="'+im.big+'" alt="" style="'+st+'">'; }).join('');
+    setW=p.images.reduce((a,im)=>a+dims(im).w+gap,0); const reps=Math.max(2,Math.ceil(innerWidth/setW)+2); track.innerHTML=one.repeat(reps); track.querySelectorAll('video').forEach(v=>{ v.muted=true; v.play().catch(()=>{}); }); }
+  const coarse=matchMedia('(pointer:coarse)').matches;   /* touch: a quicker settle so the row never feels behind the finger */
+  function tick(){ wx+=(wtarget-wx)*(coarse?0.2:0.11); const m=((wx%setW)+setW)%setW; track.style.transform='translate3d('+(-m)+'px,0,0)'; if(viewing) raf=requestAnimationFrame(tick); }
   function open(i,k){ const p=D.projects[i]; if(!p) return; viewing=true; wname=p.name; wt.innerHTML=p.name.replace(/</g,'&lt;')+'<small>About the work</small>'; wp.textContent=p.writeup||'';
-    document.body.classList.add('viewing'); void strip.offsetHeight; build(p);
-    const h=strip.clientHeight, k0=k||0; wx=wtarget=p.images.slice(0,k0).reduce((a,im)=>a+im.r*h+24,0)+p.images[k0].r*h/2-innerWidth/2;   // clicked image lands centred
+    lockPage(); document.body.classList.add('viewing'); void strip.offsetHeight; build(p);
+    const k0=k||0, g=gapW(); wx=wtarget=p.images.slice(0,k0).reduce((a,im)=>a+dims(im).w+g,0)+dims(p.images[k0]).w/2-innerWidth/2;   // clicked image lands centred
     requestAnimationFrame(()=>work.classList.add('up')); cancelAnimationFrame(raf); tick(); }
-  function close(){ if(!viewing) return; viewing=false; work.classList.remove('up'); document.body.classList.remove('viewing'); }
+  // Phones (Joel, 2026-10-11): while the enlarged row is open the page behind must not move. iOS ignores overflow:hidden on body,
+  // so the body is pinned with position:fixed at the current scroll and put back exactly there on close.
+  let lockY=null; const bs=document.body.style;
+  function lockPage(){ if(lockY!==null) return; lockY=scrollY; bs.position='fixed'; bs.top=(-lockY)+'px'; bs.left='0'; bs.right='0'; bs.width='100%'; }
+  function unlockPage(){ if(lockY===null) return; const y=lockY; lockY=null; bs.position=''; bs.top=''; bs.left=''; bs.right=''; bs.width=''; const sb=document.documentElement.style.scrollBehavior; document.documentElement.style.scrollBehavior='auto'; scrollTo(0,y); document.documentElement.style.scrollBehavior=sb; }
+  work.addEventListener('touchmove',e=>{ if(viewing && !e.target.closest('.about')) e.preventDefault(); },{passive:false});
+  function close(){ if(!viewing) return; viewing=false; work.classList.remove('up'); document.body.classList.remove('viewing'); unlockPage(); }
   work.querySelector('.close').addEventListener('click',close);
   work.addEventListener('click',e=>{ if(e.target.closest('.strip')||e.target.closest('.about')) return; close(); }); addEventListener('keydown',e=>{ if(!viewing) return; if(e.key==='Escape') close(); if(e.key==='ArrowRight'||e.key==='ArrowDown') wtarget+=240; if(e.key==='ArrowLeft'||e.key==='ArrowUp') wtarget-=240; });
   work.addEventListener('wheel',e=>{ if(!viewing) return; e.preventDefault(); wtarget+=(Math.abs(e.deltaX)>Math.abs(e.deltaY)?e.deltaX:e.deltaY); },{passive:false});
-  let drag=null; strip.addEventListener('pointerdown',e=>{ drag={x:e.clientX,t:wtarget}; strip.setPointerCapture(e.pointerId); });
-  strip.addEventListener('pointermove',e=>{ if(drag) wtarget=drag.t-(e.clientX-drag.x); }); strip.addEventListener('pointerup',()=>drag=null); strip.addEventListener('pointercancel',()=>drag=null);
+  // Drag (Joel, 2026-10-11: "so soo slow to slide" on the phone): on touch the row tracks the finger 1:1.25 with no easing lag,
+  // and a flick keeps it gliding (release velocity x 520 ms, eased out by tick) instead of stopping dead.
+  let drag=null; strip.addEventListener('pointerdown',e=>{ drag={x:e.clientX,t:wtarget,lx:e.clientX,lt:performance.now(),v:0,touch:e.pointerType!=='mouse'}; try{ strip.setPointerCapture(e.pointerId); }catch(_){} });
+  strip.addEventListener('pointermove',e=>{ if(!drag) return; const now=performance.now(), dt=Math.max(8,now-drag.lt);
+    drag.v=0.6*drag.v+0.4*((e.clientX-drag.lx)/dt); drag.lx=e.clientX; drag.lt=now;
+    wtarget=drag.t-(e.clientX-drag.x)*(drag.touch?1.25:1); if(drag.touch) wx=wtarget; });
+  const endDrag=()=>{ if(!drag) return; if(performance.now()-drag.lt<90 && Math.abs(drag.v)>0.05) wtarget-=drag.v*520*(drag.touch?1.25:1); drag=null; };
+  strip.addEventListener('pointerup',endDrag); strip.addEventListener('pointercancel',endDrag);
   addEventListener('resize',()=>{ if(viewing){ const p=D.projects.find(q=>q.name===wname); if(p) build(p); } });
   projs.forEach((el,i)=>{ const big=el.querySelector('.big'), subs=[...el.querySelectorAll('.tile')];
     subs.forEach((t,k)=>t.addEventListener('click',e=>{ e.stopPropagation(); open(i,k); }));
