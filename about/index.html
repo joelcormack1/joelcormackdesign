@@ -10,21 +10,22 @@ a{color:inherit;text-decoration:none}
 #hd a:hover,#hd a.on{text-decoration:underline;text-underline-offset:2px}
 /* About, Joel's Figma redesign (2026-10-11): photo + contact | statement + bio | education and experience, thin rules between */
 #ab{--rule:rgba(127,127,127,.55);display:grid;grid-template-columns:minmax(0,291fr) 1px minmax(0,363fr) 1px minmax(0,485fr);column-gap:clamp(24px,3vw,43px);align-items:stretch;align-content:start;padding:clamp(96px,15.5vh,140px) 3.6vw 6vh 4.5vw}
-#ab .rule{background:var(--rule)}
+#ab .rule{background:var(--rule)} #ab .c1{grid-column:1;grid-row:1} #ab .r1{grid-column:2;grid-row:1} #ab .c2{grid-column:3;grid-row:1} #ab .r2{grid-column:4;grid-row:1} #ab .cv{grid-column:5;grid-row:1}   /* DOM order = phone order (headline first); desktop places the columns */
 #ab .c1{display:flex;flex-direction:column;gap:31px}
 #ab .photo{aspect-ratio:291/359;width:100%;overflow:hidden;background:#111}
 #ab .photo img{width:100%;height:100%;object-fit:cover;display:block}
 #ab .photo .empty{display:flex;align-items:center;justify-content:center;height:100%;text-align:center;padding:24px;font:500 12px/1.4 'Helvetica Neue',Helvetica,Arial,sans-serif;text-transform:uppercase;opacity:.4}
-#ab .contact{font:500 13px/16.9px 'Helvetica Neue',Helvetica,Arial,sans-serif} #ab .contact h4{margin:0 0 5px;font:700 13px/13px 'Helvetica Neue',Helvetica,Arial,sans-serif}
+#ab .contact{font:500 13px/16.9px 'Helvetica Neue',Helvetica,Arial,sans-serif} #ab .contact .ch{margin:0 0 5px;font:700 13px/13px 'Helvetica Neue',Helvetica,Arial,sans-serif}
 #ab .contact a{display:block;margin:0 0 5px} #ab .contact a:hover{text-decoration:underline;text-underline-offset:2px}
-#ab .c2{display:flex;flex-direction:column;justify-content:space-between;gap:48px}
-#ab .say{margin:0;font:700 clamp(28px,3.03vw,44px)/1.08 'Helvetica Neue',Helvetica,Arial,sans-serif;letter-spacing:-.04em}
-#ab .bio p{margin:0 0 .75em;font:400 clamp(14px,1.18vw,17px)/1.39 'Helvetica Neue',Helvetica,Arial,sans-serif;letter-spacing:-.02em;opacity:.92} #ab .bio p:last-child{margin-bottom:0}
-#ab .cv{letter-spacing:-.02em} #ab .cv h4{margin:0 0 31px;font:700 24px/14px 'Helvetica Neue',Helvetica,Arial,sans-serif;letter-spacing:-.02em}
+#ab .c2{display:flex;flex-direction:column;justify-content:flex-start;gap:36px}
+#ab .say{margin:0;font:700 clamp(28px,2.7vw,40px)/1.08 'Helvetica Neue',Helvetica,Arial,sans-serif;letter-spacing:-.035em;text-wrap:balance}
+#ab .bio p{margin:0 0 1em;font:400 clamp(16px,1.18vw,17px)/1.5 'Helvetica Neue',Helvetica,Arial,sans-serif;letter-spacing:-.01em;opacity:.92;max-width:40em} #ab .bio p:last-child{margin-bottom:0}
+#ab .cv{letter-spacing:-.02em} #ab .cv .cvh{margin:0 0 31px;font:700 24px/1 'Helvetica Neue',Helvetica,Arial,sans-serif;letter-spacing:-.02em}
+#ab a:focus-visible,#hd a:focus-visible{outline:2px solid currentColor;outline-offset:3px}
 #ab .cv hr{border:0;border-top:1px solid var(--rule);width:82.5%;margin:33px 0}
 #ab .row{display:grid;grid-template-columns:112px minmax(0,1fr);column-gap:16px;margin:0 0 20px;font:400 13px/16.9px 'Helvetica Neue',Helvetica,Arial,sans-serif} #ab .row:last-child{margin-bottom:0}
-#ab .row .when{font-size:12px;line-height:15.6px;opacity:.65} #ab .row b{display:block;font-weight:700} #ab .row small{display:block;font-size:13px;opacity:.6}
-@media (max-width:900px){#hd .loc{display:none} #ab{grid-template-columns:1fr;row-gap:48px;padding:calc(44px + 28px) 20px 64px} #ab .rule{display:none} #ab .photo{width:min(100%,360px)} #ab .c2{justify-content:flex-start} #ab .row{grid-template-columns:96px minmax(0,1fr)}}
+#ab .row>div:last-child{text-wrap:balance} #ab .row .when{font-size:12px;line-height:15.6px;opacity:.65} #ab .row b{display:block;font-weight:700} #ab .row small{display:block;font-size:13px;opacity:.6}
+@media (max-width:900px){#hd .loc{display:none} #ab{grid-template-columns:1fr;row-gap:48px;padding:calc(44px + 28px) 20px 64px} #ab .rule{display:none} #ab .photo{width:min(100%,360px)} #ab>*{grid-column:auto!important;grid-row:auto!important} #ab .c2{gap:28px} #ab .say{font-size:clamp(28px,8vw,36px)} #ab .bio p{font-size:16px} #ab .row{grid-template-columns:96px minmax(0,1fr)}}
 
 @media (hover:hover) and (pointer:fine){
   body.cx, body.cx *{cursor:none!important}
@@ -41,15 +42,14 @@ body{background:#000;color:#fff}
 .proj .big,.tile{background:transparent}
 #brands.mid{background:#000;color:#fff}
 #ab .photo{background:#111} #ab .photo .empty{color:rgba(255,255,255,.45)}
-</style><meta name="build" content="about-v=1791756508"></head>
+</style><meta name="build" content="about-v=1791825631"></head>
 <body>
-<header id="hd" class="caps"><a class="name" href="../">Joel Cormack</a><nav class="nav"><a href="../#work">Work</a><a class="on" href="./?v=1791756508">About</a></nav><div class="loc"><span>Current Location:</span><b>Los Angeles, California</b></div></header>
+<header id="hd" class="caps"><a class="name" href="../">Joel Cormack</a><nav class="nav"><a href="../#work">Work</a><a class="on" href="./?v=1791825631">About</a></nav><div class="loc"><span>Current Location:</span><b>Los Angeles, California</b></div></header>
 <main id="ab">
-  <div class="c1"><div class="photo"><img src="joel.jpg" alt="Joel Cormack"></div><div class="contact"><h4>Contact</h4><a href="mailto:Joel.Cormack@gmail.com">Joel.Cormack@gmail.com</a><a href="tel:+15872169226">587-216-9226</a><a href="https://linkedin.com/in/joel-cormack-8ab75822a" target="_blank" rel="noopener">LinkedIn</a><a href="https://www.instagram.com/joelcormack.jpg/" target="_blank" rel="noopener">Instagram</a></div></div>
-  <div class="rule"></div>
-  <div class="c2"><h1 class="say">Design isnt what I do, its who I am.</h1><div class="bio"><p>I blend creativity with functionality to create work that’s visually compelling, culturally relevant, and built to resonate.</p><p>Im a visual designer at SixTwentySix, a production studio in Culver City, where I design director treatments, pitch decks and brand systems for national campaigns. Before that I was at Otis Design Lab, and I studied graphic design at Otis after political science and art history at the University of Alberta.</p><p>Originally from Alberta, Canada. Now LA.</p></div></div>
-  <div class="rule"></div>
-  <aside class="cv"><section><h4>Education</h4><div class="row"><div class="when">2025</div><div><b>BFA, Graphic Design (Honors)</b>Otis College of Art and Design, Los Angeles</div></div><div class="row"><div class="when">2021</div><div><b>BA (Honors), Political Science and Art History</b>University of Alberta</div></div></section><hr><section><h4>Experience</h4><div class="row"><div class="when">2025 to present</div><div><b>Visual Designer</b>SixTwentySix<small>Culver City, CA</small></div></div><div class="row"><div class="when">2023 to 2025</div><div><b>Graphic Designer</b>Otis Design Lab<small>Los Angeles, CA</small></div></div><div class="row"><div class="when">2024</div><div><b>Production Assistant</b>Dennis Leupold Photography<small>Los Angeles, CA</small></div></div><div class="row"><div class="when">2022</div><div><b>Production Design Intern</b>Critical Mass<small>Calgary, AB</small></div></div></section></aside>
+  <div class="c2"><h1 class="say">Visual designer working across branding, fashion, and advertising.</h1><div class="bio"><p>I’m Joel Cormack, a Canadian visual designer based in Los Angeles. I create identities, apparel graphics, and digital experiences, with an interest in how brands move between culture, image, and everyday life.</p><p>At SixTwentySix, I design director treatments, pitch decks, and brand systems for national campaigns, translating creative ideas into a clear visual direction.</p><p>Previously, I worked at Otis Design Lab and earned my BFA in Graphic Design from Otis College of Art and Design. Before moving to LA, I studied political science and art history at the University of Alberta.</p></div></div>
+  <div class="c1"><div class="photo"><img src="joel.jpg" alt="Joel Cormack"></div><div class="contact"><h2 class="ch">Contact</h2><a href="mailto:Joel.Cormack@gmail.com">Joel.Cormack@gmail.com</a><a href="tel:+15872169226">587-216-9226</a><a href="https://linkedin.com/in/joel-cormack-8ab75822a" target="_blank" rel="noopener">LinkedIn</a><a href="https://www.instagram.com/joelcormack.jpg/" target="_blank" rel="noopener">Instagram</a></div></div>
+  <div class="rule r1" aria-hidden="true"></div><div class="rule r2" aria-hidden="true"></div>
+  <aside class="cv"><section><h2 class="cvh">Experience</h2><div class="row"><div class="when">2025 to present</div><div><b>Visual Designer</b>SixTwentySix<small>Culver City, CA</small></div></div><div class="row"><div class="when">2023 to 2025</div><div><b>Graphic Designer</b>Otis Design Lab<small>Los Angeles, CA</small></div></div><div class="row"><div class="when">2024</div><div><b>Production Assistant</b>Dennis Leupold Photography<small>Los Angeles, CA</small></div></div><div class="row"><div class="when">2022</div><div><b>Production Design Intern</b>Critical Mass<small>Calgary, AB</small></div></div></section><hr><section><h2 class="cvh">Education</h2><div class="row"><div class="when">2025</div><div><b>BFA, Graphic Design (Honors)</b>Otis College of Art and Design, Los Angeles</div></div><div class="row"><div class="when">2019 to 2021</div><div><b>Studies in Political Science and Art History</b>University of Alberta</div></div></section></aside>
 </main>
 <script>
 (function(){
